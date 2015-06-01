@@ -36,7 +36,7 @@ public class DefaultProjectile extends Projectile {
 	public void update() {
 		if(this.hasCollided(nx, ny)) {
 			new Emitter(level, x+5, y+5, 50, 44 , 2, 0xffaaaaaa);
-			BasicSoundEffect.playSound("/hit.wav");
+			BasicSoundEffect.playSound(BasicSoundEffect.SFX_HIT, BasicSoundEffect.LOW_PRIORITY);
 			level.removeEntity(this);
 		}
 		//if(tickCount % 10 == 0) sprite = sprite.rotate(7+3*8, Math.PI / 20.0);

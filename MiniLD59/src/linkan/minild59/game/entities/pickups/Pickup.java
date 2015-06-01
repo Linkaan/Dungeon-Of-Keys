@@ -24,7 +24,7 @@ public abstract class Pickup extends Entity {
 	@Override
 	public void update() {
 		if(level.getPlayer().getBounds().contains((int)x+8, (int)y+8)){
-			BasicSoundEffect.playSound("/pickup.wav");
+			BasicSoundEffect.playSound(BasicSoundEffect.SFX_PICKUP, BasicSoundEffect.NORMAL_PRIORITY);
 			level.getPlayer().pickup(this);
 			level.removeEntity(this);
 		}

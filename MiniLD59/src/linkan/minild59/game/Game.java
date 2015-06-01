@@ -1,7 +1,6 @@
 package linkan.minild59.game;
 
 import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,6 +35,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE  = 3;
 	public static final String TITLE="Dungeon Of Keys";
+	public static final Dimension DIMENSIONS = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
 	
 	public static final int LEVEL_WIDTH  = 64;
 	public static final int LEVEL_HEIGHT = 64;
@@ -51,6 +51,7 @@ public class Game extends Canvas implements Runnable{
 	};
 	public static STATE gameState = STATE.Menu;
 	
+	public JFrame frame;
 	public Level level;
 	public boolean running = false;
 	public int tickCount = 0;
@@ -61,7 +62,6 @@ public class Game extends Canvas implements Runnable{
 	private int lastButton = -1;
 	private String dots = ".";
 	
-	private JFrame frame;
 	private Font header, font;
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -72,22 +72,7 @@ public class Game extends Canvas implements Runnable{
 	private InputHandler input;
 	private Menu menu;
 	
-	public Game(){		
-		this.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		this.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		
-		this.frame = new JFrame(TITLE);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setLayout(new BorderLayout());
-		this.frame.add(this, BorderLayout.CENTER);
-		this.frame.pack();
-		this.frame.setResizable(false);
-		this.frame.setLocationRelativeTo(null);
-		this.frame.setVisible(true);
-		
-		start();
-	}
+	private Thread thread;
 	
 	public void init(){
 		InputStream is = Game.class.getResourceAsStream("/VCR_OSD_MONO_1.001.ttf");
@@ -139,11 +124,17 @@ public class Game extends Canvas implements Runnable{
 	
 	public synchronized void start(){
 		running = true;
-		new Thread(this).start();
+		Thread thread = new Thread(this, Game.TITLE+"_main");
+		thread.start();
 	}
 	
 	public synchronized void stop(){
 		running = false;
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -185,7 +176,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public void won() {
-		BasicSoundEffect.playSound("/win.wav");
+		BasicSoundEffect.playSound(BasicSoundEffect.SFX_WIN, BasicSoundEffect.HIGH_PRIORITY);
 		level.getPlayer().boss = false;
 		fading = true;
 		new Thread(() -> {
@@ -266,7 +257,7 @@ public class Game extends Canvas implements Runnable{
 			if(gameState == STATE.Game && !fading){
 					level.update();
 					if(level.getPlayer().keysPicked >= 3){
-						BasicSoundEffect.playSound("/boss.wav");
+						BasicSoundEffect.playSound(BasicSoundEffect.SFX_BOSS, BasicSoundEffect.HIGH_PRIORITY);
 						fading = true;
 						new Thread(() -> {
 							while(alpha > 0.0f){ // fade out
@@ -393,9 +384,5 @@ public class Game extends Canvas implements Runnable{
 		
 		g.dispose();
 		bs.show();
-	}
-	
-	public static void main(String[] args) {
-		new Game();
 	}
 }

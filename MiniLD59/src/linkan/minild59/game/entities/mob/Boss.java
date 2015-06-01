@@ -249,7 +249,7 @@ public class Boss extends Mob {
 				new Emitter(level, pos.getX(), pos.getY(), 150, 44 , 2, 0xffaaaaaa);
 				level.addEntity(new Enemy(level, "Enemy", pos.getX(),pos.getY(), 1.0, 0.5, 8.0));
 			}
-			BasicSoundEffect.playSound("/hurt.wav");
+			BasicSoundEffect.playSound(BasicSoundEffect.SFX_HURT, BasicSoundEffect.NORMAL_PRIORITY);
 			lastHP = phealth;
 			health -= damage;
 		} else {

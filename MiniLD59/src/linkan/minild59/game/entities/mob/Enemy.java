@@ -137,7 +137,7 @@ public class Enemy extends Mob {
 			level.removeEntity(this);
 			if(Math.random() > .5) level.addEntity(new HealthPickup(level, x, y));
 		}
-		BasicSoundEffect.playSound("/hurt.wav");
+		BasicSoundEffect.playSound(BasicSoundEffect.SFX_HURT, BasicSoundEffect.NORMAL_PRIORITY);
 		new Emitter(level, x+8, y+8, 50, 44 , 2, 0xFFB41C2B);
 	}
 

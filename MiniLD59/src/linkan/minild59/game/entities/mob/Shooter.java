@@ -213,7 +213,7 @@ public class Shooter extends Mob {
 	
 	@Override
 	public void takeDamage(double damage) {
-		if(health - damage > 0) {health -= damage;BasicSoundEffect.playSound("/hurt.wav");} else {
+		if(health - damage > 0) {health -= damage;BasicSoundEffect.playSound(BasicSoundEffect.SFX_HURT, BasicSoundEffect.NORMAL_PRIORITY);} else {
 			health = 0;
 			level.removeEntity(this);
 			if(Math.random() > .5) level.addEntity(new HealthPickup(level, x, y));

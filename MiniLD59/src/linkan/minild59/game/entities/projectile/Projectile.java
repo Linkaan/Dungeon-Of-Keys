@@ -21,7 +21,7 @@ public abstract class Projectile extends Entity {
 		this.owner = owner;
 		this.x = x;
 		this.y = y;
-		BasicSoundEffect.playSound("/shoot.wav");
+		BasicSoundEffect.playSound(BasicSoundEffect.SFX_SHOOT, BasicSoundEffect.LOW_PRIORITY);
 	}
 	
 	protected abstract boolean hasCollided(double xa, double ya);

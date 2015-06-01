@@ -184,9 +184,9 @@ public class Player extends Mob {
 
 	@Override
 	public void takeDamage(double damage) {
-		if(health - damage > 0) {health -= damage;BasicSoundEffect.playSound("/hurt.wav");} else {
+		if(health - damage > 0) {health -= damage;BasicSoundEffect.playSound(BasicSoundEffect.SFX_HURT, BasicSoundEffect.NORMAL_PRIORITY);} else {
 			health = 0;
-			BasicSoundEffect.playSound("/lose.wav");
+			BasicSoundEffect.playSound(BasicSoundEffect.SFX_LOSE, BasicSoundEffect.HIGH_PRIORITY);
 			Game.gameState = STATE.End;
 		}
 		new Emitter(level, x+8, y+8, 50, 44 , 2, 0xff93131e);
