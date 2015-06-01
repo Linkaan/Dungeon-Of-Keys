@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.4
+Created-By: 1.7.0_67-b01 (Oracle Corporation)
+Main-Class: com.soundhelix.SoundHelix
+Class-Path: lib/gnu-getopt.jar lib/log4j.jar
+
+Name: common
+Specification-Title: SoundHelix
+Specification-Version: 0.8
+Specification-Vendor: soundhelix.com
+Implementation-Title: SoundHelix
+Implementation-Version: 0.8 r799 2015-04-28
+Implementation-Vendor: soundhelix.com
+

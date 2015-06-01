@@ -362,8 +362,8 @@ public class Game extends Canvas implements Runnable{
 			FontMetrics fm = g.getFontMetrics();
 			Rectangle2D r = fm.getStringBounds("Random", g);
 			g.setColor(Color.WHITE);
-			g.fill3DRect((Game.WIDTH*Game.SCALE - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5), true);
-			if(lastButton != input.getButton() && (lastButton = input.getButton()) == 1 && menu.mouseOver((Game.WIDTH*Game.SCALE - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5))){
+			g.fill3DRect((this.getWidth() - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5), true);
+			if(lastButton != input.getButton() && (lastButton = input.getButton()) == 1 && menu.mouseOver((this.getWidth() - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5))){
 				new Thread(() -> {					
 					SpriteSheet spriteSheet = new SpriteSheet(); 
 					SPRITE_SHEET.image = spriteSheet.image;
@@ -371,13 +371,13 @@ public class Game extends Canvas implements Runnable{
 				}).start();
 			}
 			g.setColor(Color.BLACK);
-			g.drawString("Random", (Game.WIDTH*Game.SCALE - (int) r.getWidth()), fm.getAscent());
+			g.drawString("Random", (this.getWidth() - (int) r.getWidth()), fm.getAscent());
 		}else{
 			g.setColor(Color.WHITE);
 			g.setFont(header);
 			FontMetrics fm = g.getFontMetrics();
 			Rectangle2D r = fm.getStringBounds("Generating Level"+dots, g);
-			g.drawString("Generating Level"+dots, (Game.WIDTH*Game.SCALE - (int) r.getWidth()) >> 1, ((Game.HEIGHT*Game.SCALE - (int) r.getHeight()) >> 1) + fm.getAscent());		
+			g.drawString("Generating Level"+dots, (this.getWidth() - (int) r.getWidth()) >> 1, ((this.getHeight() - (int) r.getHeight()) >> 1) + fm.getAscent());		
 		}
 		
 		//Debug.drawLine(screen, 0, 0, WIDTH, HEIGHT, 0xff00ff00, false);
