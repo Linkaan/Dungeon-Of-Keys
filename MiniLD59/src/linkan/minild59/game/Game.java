@@ -3,18 +3,23 @@ package linkan.minild59.game;
 import java.awt.AlphaComposite;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import linkan.minild59.game.audio.BasicSoundEffect;
@@ -33,7 +38,7 @@ public class Game extends Canvas implements Runnable{
 	
 	public static final int WIDTH  = 160;
 	public static final int HEIGHT = WIDTH / 12 * 9;
-	public static final int SCALE  = 3;
+	public static final int SCALE  = 4;
 	public static final String TITLE="Dungeon Of Keys";
 	public static final Dimension DIMENSIONS = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
 	
@@ -51,6 +56,7 @@ public class Game extends Canvas implements Runnable{
 	};
 	public static STATE gameState = STATE.Menu;
 	
+	public Cursor invisibleCursor;
 	public JFrame frame;
 	public Level level;
 	public boolean running = false;
@@ -64,13 +70,14 @@ public class Game extends Canvas implements Runnable{
 	
 	private Font header, font;
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+	private BufferedImage crosshair = null;
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
 	private BoxBlurFilter bbfilter;
 	private SoundHelixMusic music;
 	private Screen screen;
 	private InputHandler input;
-	private Menu menu;
+	private Menu menu;	
 	
 	private Thread thread;
 	
@@ -86,6 +93,17 @@ public class Game extends Canvas implements Runnable{
 			font = new Font("Verdana", Font.PLAIN, 16);
 			e.printStackTrace();
 		}
+		
+		try {
+			crosshair = ImageIO.read(SpriteSheet.class.getResourceAsStream("/crosshair.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+	    Point hotSpot = new Point(0,0);
+	    BufferedImage cursorImage = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT); 
+	    invisibleCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "InvisibleCursor");
 		
 		bbfilter = new BoxBlurFilter();
 		music = new SoundHelixMusic();
@@ -250,6 +268,10 @@ public class Game extends Canvas implements Runnable{
 			fading = false;
 		}).start();
 	}
+	
+	public void setCursor(Cursor cur){
+		frame.setCursor(cur);
+	}
 
 	private void update(){
 		tickCount++;
@@ -291,6 +313,7 @@ public class Game extends Canvas implements Runnable{
 			}else if(gameState == STATE.Boss && !fading){
 				level.update();
 			}else if(gameState == STATE.Menu || gameState == STATE.Options || gameState == STATE.End){
+				frame.setCursor(Cursor.getDefaultCursor());
 				if(tickCount % 120 == 0){
 					xOffset = Utility.random(0, level.width<<4);
 					yOffset = Utility.random(0, level.height<<4);
@@ -341,6 +364,7 @@ public class Game extends Canvas implements Runnable{
 				level.renderTiles(screen, (int)xOffset, (int)yOffset);		
 				level.renderEntities(screen);
 				g.drawImage(image, 0, 0, this.getWidth(),this.getHeight(),null);
+				if(crosshair != null) g.drawImage(crosshair, input.getX(), input.getY(), 16*SCALE, 16*SCALE, null);
 			}else if(gameState == STATE.Menu || gameState == STATE.Options || gameState == STATE.End){
 				level.renderTiles(screen, (int)xOffset, (int)yOffset);
 				g.drawImage(bbfilter.filter(image, null), 0, 0, this.getWidth(),this.getHeight(),null);

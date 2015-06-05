@@ -18,21 +18,21 @@ public class SoundHelixMusic {
 	
 	public void GenerateAndPlay(long randomSeed){
 		if(player != null) player.abortPlay();
-		new Thread(() -> {	
-	        try {
-	            // configure log4j
-	            PropertyConfigurator.configureAndWatch("log4j.properties", 60 * 1000);
-	
-	            SongContext songContext = SongUtils.generateSong(new URL("http://www.soundhelix.com/applet/examples/SoundHelix-Popcorn.xml"), randomSeed);
-	            
-	            player = songContext.getPlayer();
-	            
-	            player.open();
-	            player.play(songContext);
-	            player.close();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+		new Thread(() -> {
+			try {
+				// configure log4j
+				PropertyConfigurator.configureAndWatch("log4j.properties", 60 * 1000);
+				
+				SongContext songContext = SongUtils.generateSong(new URL("http://www.soundhelix.com/applet/examples/SoundHelix-Popcorn.xml"), randomSeed);
+				
+				player = songContext.getPlayer();
+				
+				player.open();
+				player.play(songContext);
+				player.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}).start();
 	}
 

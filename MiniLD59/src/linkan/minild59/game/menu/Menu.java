@@ -8,8 +8,8 @@ import java.awt.geom.Rectangle2D;
 
 import linkan.minild59.game.Game;
 import linkan.minild59.game.Game.STATE;
-import linkan.minild59.game.graphics.SpriteSheet;
 import linkan.minild59.game.InputHandler;
+import linkan.minild59.game.graphics.SpriteSheet;
 
 public class Menu {
 	
@@ -64,6 +64,7 @@ public class Menu {
 		if(lastButton != input.getButton() && (lastButton = input.getButton()) == 1){
 			if(Game.gameState == STATE.Menu && mouseOver(((game.getWidth())>>1)-((game.getWidth())>>2), (game.getHeight())-((game.getHeight()+128)>>3)*3, ((game.getWidth())>>1), (game.getHeight())>>3)){
 				game.fadeIn(25);
+				game.setCursor(game.invisibleCursor);
 				Game.gameState = STATE.Game;
 			}else if(mouseOver(((game.getWidth())>>1)-((game.getWidth())>>2), (game.getHeight())-((game.getHeight()+128)>>3)*2, ((game.getWidth())>>1), (game.getHeight())>>3)){
 				if(Game.gameState == STATE.Menu){
@@ -75,6 +76,7 @@ public class Menu {
 				}else if(Game.gameState == STATE.End){
 					game.retry();
 					game.fadeIn(25);
+					game.setCursor(game.invisibleCursor);
 					Game.gameState = STATE.Game;
 				}
 			}else if(mouseOver(((game.getWidth())>>1)-((game.getWidth())>>2), (game.getHeight())-((game.getHeight()+128)>>3)*1, ((game.getWidth())>>1), (game.getHeight())>>3)){

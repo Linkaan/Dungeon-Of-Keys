@@ -11,6 +11,7 @@ import linkan.minild59.game.level.Level;
 import linkan.minild59.game.level.Node;
 import linkan.minild59.game.level.tiles.Tile;
 import linkan.minild59.game.util.RayCastingResult;
+import linkan.minild59.game.util.Utility;
 import linkan.minild59.game.util.Vector2i;
 
 public class Shooter extends Mob {
@@ -34,7 +35,6 @@ public class Shooter extends Mob {
 		this.fireRate = DefaultProjectile.FIRE_RATE;
 	}
 	
-	/**
 	@Override
 	public void update() {
 		if(fireRate > 0) fireRate--;
@@ -42,78 +42,7 @@ public class Shooter extends Mob {
 		if(fireRate <= 0){
 			px = level.getPlayer().getX(); 
 			py = level.getPlayer().getY();
-			Vector2i start = new Vector2i((int)(x+8) >> 4, (int)(y+8) >> 4);
-			Vector2i goal = new Vector2i((int)px+8 >> 4,(int) py+8 >> 4);
-			distance = start.getDistance(goal);
-			if(distance <= MAX_RADIUS){
-				Vector2i goal1 = new Vector2i((int)px,(int) py+8);
-				Vector2i goal2 = new Vector2i((int)px+16,(int) py+8);
-				double dx = px - x;
-				double dy = py - y;
-				double angle1 = Math.atan2(dy, dx);
-				double angle2 = Math.atan2(dy, dx+16);
-				double distance1 = start.getDistance(goal1);
-				double distance2 = start.getDistance(goal2);
-				RayCastingResult raycast1 = level.RayCast(new Vector2i((int)x, (int)y+8), angle1, (int)(distance1));
-				RayCastingResult raycast2 = level.RayCast(new Vector2i((int)x+16, (int)y+8), angle2, (int)(distance2));
-				this.end1 = raycast1.getPosition();
-				this.end2 = raycast1.getPosition();
-				if(raycast1.hasCollided() || raycast2.hasCollided()){
-					if(tickCount % 60 == 0) path = level.findPath(start, goal);
-					if (path != null) {
-						if (!path.isEmpty()) {
-							Vector2i vec = path.get(path.size() - 1).tile;
-							if((int)this.x < vec.getX() << 4) xa += speed;
-							if((int)this.x > vec.getX() << 4) xa -= speed;
-							if((int)this.y < vec.getY() << 4) ya += speed;
-							if((int)this.y > vec.getY() << 4) ya -= speed;
-						}
-					}
-				}else{
-					if(fireRate <= 0){
-						shoot(x, y, Math.atan2(dy, dx));
-						fireRate = DefaultProjectile.FIRE_RATE;
-					}
-				}
-			}else{
-				this.end1 = null;
-				this.end2 = null;
-			}
-			
-		}
-		if(fireRate <= 0){
-			if (distance <= MAX_RADIUS) {
-				//this.end = raycast.getPosition();
-
-			}/**else{
-				end = null;
-			}
-		}
-		if(xa != 0 || ya != 0){
-			move(xa, ya);
-			isMoving = true;
-		}else{
-			isMoving = false;
-		}
-		if(level.getTile((int)(this.x + 4) >> 4, (int)(this.y + 8) >> 4).getId() == Tile.WATER.getId()){
-			speed = swimSpeed;
-			isSwimming = true;
-		} else if(isSwimming && level.getTile((int)(this.x + 4) >> 4, (int)(this.y + 8) >> 4).getId() != Tile.WATER.getId()){
-			speed = walkSpeed;
-			isSwimming = false;
-		}
-		
-		tickCount++;
-	}
-	*/
-	@Override
-	public void update() {
-		if(fireRate > 0) fireRate--;
-		double xa = 0, ya = 0, distance = 0, px = 0, py = 0;
-		if(fireRate <= 0){
-			px = level.getPlayer().getX(); 
-			py = level.getPlayer().getY();
-			Vector2i start = new Vector2i((int)(x+8) >> 4, (int)(y+8) >> 4);
+			Vector2i start = new Vector2i((int)(x) >> 4, (int)(y) >> 4);
 			Vector2i goal = new Vector2i((int)px+8 >> 4,(int) py+8 >> 4);
 			distance = start.getDistance(goal);
 			if(distance <= MAX_RADIUS){
@@ -134,7 +63,8 @@ public class Shooter extends Mob {
 					}
 				}else{
 					if(fireRate <= 0){
-						shoot(x+4, y+4, angle);
+						int rand = Utility.random(-64, 64);
+						shoot(x+4, y+4, angle + (Math.abs(rand) >= 8 ? (Math.PI/rand) : 0));
 						fireRate = DefaultProjectile.FIRE_RATE;
 					}
 				}

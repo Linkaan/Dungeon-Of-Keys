@@ -1,6 +1,5 @@
 package linkan.minild59.game.util;
 
-
 public class RayCastingResult {
 	
 	private boolean collided;
