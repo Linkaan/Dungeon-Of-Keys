@@ -94,7 +94,7 @@ public class BSPLevel extends Level {
 			    	iterator.remove();
 			    }
 			}
-			if(placedKeys++ < Math.max(3, Math.random()*_leafs.size()/2)){ this.addEntity(new KeyPickup(this, l.room.center.getX()<<4, l.room.center.getY()<<4));} else { return;};
+			if(placedKeys++ < Math.max(5, Math.random()*_leafs.size()/2)){ this.addEntity(new KeyPickup(this, l.room.center.getX()<<4, l.room.center.getY()<<4));} else { return;};
 		}
 	}
 	

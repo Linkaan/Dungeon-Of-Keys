@@ -93,10 +93,10 @@ public class Player extends Mob {
 				}
 			}
 		}else if(input.getButton() == 1 && fireRate <= 0){
-			double dx = input.getX() - (Game.WIDTH * Game.SCALE)/2;
-			double dy = input.getY() - (Game.HEIGHT * Game.SCALE)/2;
-			//double dx = input.getX() - (this.x - level.xOffset)*Game.SCALE;
-			//double dy = input.getY() - (this.y - level.yOffset)*Game.SCALE;
+			//double dx = input.getX() - (Game.WIDTH * Game.SCALE)/2;
+			//double dy = input.getY() - (Game.HEIGHT * Game.SCALE)/2;
+			double dx = input.getX() - (this.x - level.xOffset)*Game.SCALE;
+			double dy = input.getY() - (this.y - level.yOffset)*Game.SCALE;
 			shoot(x, y, Math.atan2(dy, dx));
 			fireRate = DefaultProjectile.FIRE_RATE;
 		}
@@ -144,6 +144,8 @@ public class Player extends Mob {
 			screen.render(0 , Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, true);
 			screen.render(12, Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, true);
 			screen.render(24, Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, true);
+			screen.render(36, Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, true);
+			screen.render(48, Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, true);
 			for(int i = 0; i < keysPicked; i++){
 				screen.render(i*12, Game.HEIGHT-16, 5+3*8, 0x00, 0x00, 1, false, false);
 			}

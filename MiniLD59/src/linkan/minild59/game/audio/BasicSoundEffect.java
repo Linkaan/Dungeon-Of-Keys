@@ -4,11 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 
 public class BasicSoundEffect {
 	
@@ -71,32 +73,45 @@ public class BasicSoundEffect {
 	        }
 	    }
 	
-	private static volatile int nThreads = 0;
-	
-	public static synchronized void playSound(final AudioInputStream inputStream, int priority) {
-		switch(priority){
-		default:
-		case LOW_PRIORITY:
-			if(nThreads>= MAX_THREADS>>1) return;
-			break;
-		case NORMAL_PRIORITY:
-			if(nThreads>= MAX_THREADS) return;
-			break;
-		case HIGH_PRIORITY:
-			break;
-		}
-		new Thread(() -> {
-			nThreads++;
-			try {
-				Clip clip = AudioSystem.getClip();
-				inputStream.reset();
-				clip.open(inputStream);
-				clip.start();
-				while(clip.getMicrosecondPosition() < clip.getMicrosecondLength());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			nThreads--;
-		}).start();
+	private static AtomicInteger nThreads = new AtomicInteger(0);
+
+	public static void playSound(final AudioInputStream inputStream, int priority) {
+	    final int tcount = nThreads.get();
+	    switch(priority) {
+	    default:
+	    case LOW_PRIORITY:
+	        if(tcount >= MAX_THREADS >> 1) {
+	            return;
+	        }
+	        break;
+	    case NORMAL_PRIORITY:
+	        if(tcount >= MAX_THREADS) {
+	            return;
+	        }
+	        break;
+	    case HIGH_PRIORITY:
+	        break;
+	    }
+
+	    new Thread(() -> {
+	        nThreads.incrementAndGet();
+	        try {
+	            Clip clip = AudioSystem.getClip();
+	            inputStream.reset();
+	            clip.open(inputStream);
+	            clip.start();
+
+	            final long length = clip.getMicrosecondLength();
+	            long remaining = (length - clip.getMicrosecondPosition()) / 1000;
+	            while(remaining > 0) {
+	                Thread.sleep(remaining);
+	                remaining = (length - clip.getMicrosecondPosition()) / 1000;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            nThreads.decrementAndGet();
+	        }
+	    }).start();
 	}
 }

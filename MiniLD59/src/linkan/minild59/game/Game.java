@@ -278,7 +278,7 @@ public class Game extends Canvas implements Runnable{
 		if(!level.loading){				
 			if(gameState == STATE.Game && !fading){
 					level.update();
-					if(level.getPlayer().keysPicked >= 3){
+					if(level.getPlayer().keysPicked >= 5){
 						BasicSoundEffect.playSound(BasicSoundEffect.SFX_BOSS, BasicSoundEffect.HIGH_PRIORITY);
 						fading = true;
 						new Thread(() -> {
@@ -388,10 +388,12 @@ public class Game extends Canvas implements Runnable{
 			g.setColor(Color.WHITE);
 			g.fill3DRect((this.getWidth() - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5), true);
 			if(lastButton != input.getButton() && (lastButton = input.getButton()) == 1 && menu.mouseOver((this.getWidth() - (int) r.getWidth()-10), 0, (int) r.getWidth()+20, (int)(r.getHeight()+2.5))){
-				new Thread(() -> {					
-					SpriteSheet spriteSheet = new SpriteSheet(); 
-					SPRITE_SHEET.image = spriteSheet.image;
-					SPRITE_SHEET.pixels = spriteSheet.pixels;
+				new Thread(() -> {
+					synchronized(SPRITE_SHEET){						
+						SpriteSheet spriteSheet = new SpriteSheet(); 
+						SPRITE_SHEET.image = spriteSheet.image;
+						SPRITE_SHEET.pixels = spriteSheet.pixels;
+					}
 				}).start();
 			}
 			g.setColor(Color.BLACK);
